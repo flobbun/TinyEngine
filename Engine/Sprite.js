@@ -16,7 +16,13 @@ export default class Sprite{
         this.image = new Image(width, height);
         this.image.src = this.src;
 
-
+        this.image.style.border = "2px solid red";
         console.log("SPRITE CREATED", this.image);
     }
+
+    draw(ctx, progress){
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.drawImage(this.image, this.options.x, this.options.y, this.width, this.height);
+    }
+
 }

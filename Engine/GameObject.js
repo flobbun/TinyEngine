@@ -14,7 +14,7 @@ export default class GameObject{
     static GetSprite = (alias) => {
         if (this.sprites[alias] == undefined)
             throw new Error(`Sprite with alias ${alias} does not exist`);
-        this.sprites[alias];
+        return this.sprites[alias];
     }
 
     constructor(id, x, y, options){
@@ -23,11 +23,24 @@ export default class GameObject{
         this.y = y;
         this.sprite = null;
         this.options = options || {
+            speed: 0,
             scaleX: 1,
             scaleY: 1,
             speed: 0,
             rotation: 0
         };
+    }
+
+    follow = (gameObject, speed) => this.moveToPoint(gameObject.x, gameObject.y, speed);
+
+    moveToPoint(x, y, speed){
+        const dx = x - this.x;
+        const dy = y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const angle = Math.atan2(dy, dx);
+        this.x += Math.cos(angle) * speed;
+        this.y += Math.sin(angle) * speed;
+        return distance;
     }
 
     createSprite(alias, src, width, height, options){
@@ -46,11 +59,14 @@ export default class GameObject{
         console.log(`GameObject ${this.id} now has the sprite ${alias} asigned`);
     }
 
-    draw(ctx){
-        // console.log("GameObject draw");
+    draw(ctx, progress){
+        this.sprite.draw(ctx, progress);
     }
 
     update(deltaTime){
-        // console.log("GameObject update");
+        if (this.sprite !== null){
+            this.sprite.options.x = this.x;
+            this.sprite.options.y = this.y;
+        }
     }
 }

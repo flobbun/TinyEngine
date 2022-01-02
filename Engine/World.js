@@ -18,6 +18,9 @@ export default class World{
     createGameObject(x, y, options){
         const gameObject = new GameObject(this.gameObjects.length, x, y, options);
         this.gameObjects.push(gameObject);
+
+        console.log(`GameObject ${gameObject.id} created`);
+
         return gameObject;
     }
 
@@ -37,10 +40,10 @@ export default class World{
             this.camera.follow(this.player);
     }
 
-    draw(ctx){
+    draw(ctx, progress){
         if (this.gameObjects.length > 0){
             this.gameObjects.forEach(gameObject => {
-                gameObject.draw(ctx);
+                gameObject.draw(ctx, progress);
             });
         }
     }

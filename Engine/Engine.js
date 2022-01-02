@@ -4,7 +4,9 @@ export default class Engine{
 
     static DEBUG = false;
 
-    constructor(ctx){
+    constructor(ctx, onUpdate){
+        this.keyboard = null;
+        this.onUpdate = onUpdate || function(progress){};
         this.worlds = [];
         this.lastRender = 0;
         this.ctx = ctx || document.getElementById("game").getContext("2d");
@@ -12,6 +14,9 @@ export default class Engine{
             throw new Error("No canvas found");
         window.requestAnimationFrame(this.gameLoop);
     }
+
+    enableKeyboardControls = () => 
+        import ("./Keyboard.js").then(Keyboard => this.keyboard = new Keyboard.default());
 
     createWorld = (width, height, tileSize) => {
         const world = new World(this.worlds.length, width, height, tileSize);
@@ -25,7 +30,8 @@ export default class Engine{
         if (this.worlds.length > 0){
             this.worlds.forEach(world => {
                 world.update(progress);
-                world.draw(this.ctx);
+                this.onUpdate(progress);
+                world.draw(this.ctx, progress);
             });
         }
         window.requestAnimationFrame(this.gameLoop);
