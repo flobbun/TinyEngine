@@ -8,13 +8,9 @@ export default class Keyboard{
         window.addEventListener("keyup", this.keyup);
     }
 
-    keydown(event){
-        this.keys[event.key] = true;
-    }
+    keydown = (event) => this.keys[event.key] = true;
 
-    keyup(event){
-        this.keys[event.key] = false;
-    }
+    keyup = (event) => this.keys[event.key] = false;
 
     isDown = (key) => this.keys[key] || false;
 

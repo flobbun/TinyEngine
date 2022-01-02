@@ -1,10 +1,12 @@
 import World from "./World.js";
+import Keyboard from "./Keyboard.js";
 
 export default class Engine{
 
     static DEBUG = false;
 
-    constructor(ctx, onUpdate){
+    constructor(ctx, options, onUpdate){
+        this.options = options || null;
         this.keyboard = null;
         this.onUpdate = onUpdate || function(progress){};
         this.worlds = [];
@@ -13,14 +15,19 @@ export default class Engine{
         if (!this.ctx)
             throw new Error("No canvas found");
         window.requestAnimationFrame(this.gameLoop);
+        if (this.options !== null)
+            this.Init();
     }
 
-    enableKeyboardControls = () => 
-        import ("./Keyboard.js").then(Keyboard => this.keyboard = new Keyboard.default());
+    Init(){
+        if (this.options.keyboard) this.keyboard = new Keyboard();
+    }
 
-    createWorld = (width, height, tileSize) => {
-        const world = new World(this.worlds.length, width, height, tileSize);
+    createWorld = (width, height, onCreate) => {
+        const world = new World(this.worlds.length, width, height);
         this.worlds.push(world);
+        if (onCreate)
+            onCreate(world);
         return world;
     }
 
